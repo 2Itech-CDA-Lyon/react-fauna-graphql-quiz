@@ -1,6 +1,7 @@
+import { FC } from "react";
 import useAllQuizzes from "./data";
 
-const AllQuizzesPage = () => {
+const AllQuizzesPage: FC = () => {
   const quizzes = useAllQuizzes();
 
   return (
