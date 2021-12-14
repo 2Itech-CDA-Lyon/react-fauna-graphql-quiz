@@ -8,6 +8,7 @@ query AllQuizzes {
     data {
       _id
       title
+      description
       author {
         _id
         email
