@@ -1,14 +1,6 @@
 export type FaunaId = string;
 
-export interface FaunaRef {
-  '@ref': {
-    id: FaunaId;
-    collection?: FaunaRef;
-  }
-}
-
-export interface FaunaEntity<T> {
-  ref: FaunaRef;
-  ts: number;
-  data: T;
+export interface FaunaEntity {
+  _id?: FaunaId
+  _ts?: number
 }
