@@ -1,8 +1,9 @@
-const graphqlFetch = (query: string) => 
+const graphqlFetch = (query: string, variables?: Record<string, string | number | boolean>) => 
   fetch(`/.netlify/functions/graphql`, {
     method: 'POST',
     body: JSON.stringify({
-      query
+      query,
+      variables,
     }),
     headers: {
       'Content-Type': 'application/json'

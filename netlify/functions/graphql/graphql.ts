@@ -38,7 +38,7 @@ export const handler: Handler = async (event, context) => {
       throw new BadRequestException('Body is empty.');
     }
 
-    const { query } = JSON.parse(event.body);
+    const { query, variables } = JSON.parse(event.body);
 
     // Check if query is present in request body
     if (typeof query === 'undefined') {
@@ -49,7 +49,8 @@ export const handler: Handler = async (event, context) => {
     const response = await fetch(`http${FAUNA_HTTPS === 'true' ? 's' : ''}://${FAUNA_GRAPHQL_DOMAIN}/graphql`, {
       method: 'POST',
       body: JSON.stringify({
-        query
+        query,
+        variables,
       }),
       headers: {
         'Content-Type': 'application/json',

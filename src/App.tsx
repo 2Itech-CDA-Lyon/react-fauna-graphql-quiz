@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { createGlobalStyle } from 'styled-components';
-import { AllQuizzesPage } from './pages';
+import { AllQuizzesPage, PlayQuizPage } from './pages';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -13,7 +13,7 @@ const App: FC = () => {
   return (
     <>
       <GlobalStyle />
-      <AllQuizzesPage />
+      <PlayQuizPage />
     </>
   )
 }

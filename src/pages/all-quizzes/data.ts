@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Quiz } from "../../types/api";
 import graphqlFetch from "../../utils/graphql-fetch";
+import RequestState from "../../utils/request-state";
 
 const query = `
 query AllQuizzes {
@@ -28,18 +29,26 @@ interface AllQuizzesQueryResponse {
 
 const useAllQuizzes = () => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+  const [requestState, setRequestState] = useState(RequestState.Idle);
   
   useEffect(
     () => {
+      setRequestState(RequestState.Pending);
       graphqlFetch(query)
       .then(
-        (json: AllQuizzesQueryResponse) => setQuizzes(json.data.allQuizzes.data)
+        (json: AllQuizzesQueryResponse) => {
+          setRequestState(RequestState.Success);
+          setQuizzes(json.data.allQuizzes.data);
+        }
       );
     },
     []
   );
 
-  return quizzes;
+  return {
+    quizzes,
+    requestState
+  };
 }
 
 export default useAllQuizzes;

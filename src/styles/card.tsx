@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 const Card = styled.div`
-  /* font-family: Philosopher, Arial, serif; */
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 0.25rem;
