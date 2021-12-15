@@ -24,7 +24,7 @@ type Question {
     text: String!
     order: Int!
     quiz: Quiz!
-    answers: [Answer!] @relation (name: "possible_answer")
+    answers: [Answer!] @relation(name: "possible_answer")
     rightAnswer: Answer
 }
 
@@ -33,13 +33,14 @@ A possible answer to a question from a quiz.
 """
 type Answer {
     text: String!
-    question: Question! @relation (name: "possible_answer")
+    question: Question! @relation(name: "possible_answer")
 }
-    
+
 type Query {
     allQuestions: [Question!]
     allQuizzes: [Quiz!]
     allUsers: [User!]
     allAnswers: [Answer!]
     quizzesByDifficulty(difficulty: Int): [Quiz!]
+    questionByQuizIdAndOrder(quizId: ID!, order: Int!): Question @resolver(name: "questionByQuizIdAndOrder")
 }

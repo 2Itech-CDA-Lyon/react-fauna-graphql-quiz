@@ -5,11 +5,15 @@ import graphqlFetch from "../../utils/graphql-fetch";
 import RequestState from "../../utils/request-state";
 
 const query = `
-query QuestionWithAnswersQuery($id: ID!) {
-  findQuestionByID(id: $id) {
+query QuestionWithAnswersQuery($quizId: ID!, $order: Int!) {
+  questionByQuizIdAndOrder(quizId: $quizId, order: $order) {
     _id
     text
     order
+    quiz {
+      _id
+      title
+    }
     answers {
       data {
         _id
@@ -21,26 +25,26 @@ query QuestionWithAnswersQuery($id: ID!) {
 
 interface QuestionWithAnswersQueryResponse {
   data: {
-    findQuestionByID: Question
+    questionByQuizIdAndOrder: Question
   }
 }
 
-const useQuestionWithAnswers = (id: FaunaId) => {
+const useQuestionWithAnswers = (quizId: FaunaId, order: number) => {
   const [question, setQuestion] = useState<Question>();
   const [requestState, setRequestState] = useState(RequestState.Idle);
 
   useEffect(
     () => {
       setRequestState(RequestState.Pending);
-      graphqlFetch(query, { id })
+      graphqlFetch(query, { quizId, order })
       .then(
         (json: QuestionWithAnswersQueryResponse) => {
           setRequestState(RequestState.Success);
-          setQuestion(json.data.findQuestionByID)
+          setQuestion(json.data.questionByQuizIdAndOrder)
         }
       );
     },
-    []
+    [quizId, order]
   );
 
   return {

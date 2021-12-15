@@ -1,8 +1,8 @@
 import fs from 'fs';
 import fetch from 'node-fetch';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import faunaClient from './fauna-client.mjs';
+import faunadb from 'faunadb';
+const fql = faunadb.query;
 
 const {
   FAUNA_GRAPHQL_DOMAIN,
@@ -27,6 +27,57 @@ const run = async () => {
       'Content-Type': 'application/octet-stream',
     }
   });
+
+  // Create custom indexes
+  console.info('Creating custom indexes...');
+  await faunaClient.query(
+    fql.If(
+      fql.Exists(
+        fql.Index('questionByQuizAndOrder')
+      ),
+      fql.Delete(fql.Index('questionByQuizAndOrder')),
+      null
+    )
+  );
+
+  await faunaClient.query(
+    fql.CreateIndex({
+      name: 'questionByQuizAndOrder',
+      source: fql.Collection('Question'),
+      terms: [
+        { field: ['data', 'quiz'] },
+        { field: ['data', 'order'] },
+      ],
+      unique: true,
+    })
+  );
+
+  // Create custom resolvers
+  console.info('Creating custom resolvers...');
+  await faunaClient.query(
+    fql.Update(
+      fql.Function('questionByQuizIdAndOrder'),
+      {
+        body: fql.Query(
+          fql.Lambda(
+            ["quizId", "order"],
+            fql.Select(
+              ["data", 0],
+              fql.Map(
+                fql.Paginate(
+                  fql.Match(fql.Index("questionByQuizAndOrder"), [
+                    fql.Ref(fql.Collection("Quiz"), fql.Var("quizId")),
+                    fql.Var("order")
+                  ])
+                ),
+                fql.Lambda("ref", fql.Get(fql.Var("ref")))
+              )
+            )
+          )
+        )
+      }
+    )
+  )
 }
 
 // Run main process

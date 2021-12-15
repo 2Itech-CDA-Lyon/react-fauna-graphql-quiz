@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
 import { AllQuizzesPage, PlayQuizPage } from './pages';
 
@@ -13,7 +14,13 @@ const App: FC = () => {
   return (
     <>
       <GlobalStyle />
-      <PlayQuizPage />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<AllQuizzesPage />} />
+          <Route path="/play/:quizId/:order" element={<PlayQuizPage />} />
+          <Route path="*" element={<div>Page not found.</div>} />
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }

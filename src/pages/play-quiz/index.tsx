@@ -1,13 +1,24 @@
 import { FC } from "react";
 import RequestState from "../../utils/request-state";
 import useQuestionWithAnswers from "./data";
-import { Container, Flex } from "../../styles";
+import { Button, Container, Flex } from "../../styles";
 import { Heading1 } from "../../styles/heading";
 import Loader from "react-loader-spinner";
+import { useNavigate, useParams } from "react-router-dom";
 
 const PlayQuizPage: FC = () => {
-  const questionId = '1';
-  const { question, requestState } = useQuestionWithAnswers(questionId);
+  const { quizId, order } = useParams();
+  const navigate = useNavigate();
+
+  if (typeof quizId === 'undefined') {
+    throw new Error('URL parameter "quizId" is missing.');
+  }
+
+  if (typeof order === 'undefined') {
+    throw new Error('URL parameter "order" is missing.');
+  }
+
+  const { question, requestState } = useQuestionWithAnswers(quizId, Number(order));
 
   return (
     <Container>
@@ -23,6 +34,7 @@ const PlayQuizPage: FC = () => {
           </Flex>
         :
           <>
+            <div>{question?.quiz?.title}</div>
             <Heading1>Question n°{question?.order}</Heading1>
             <p>{question?.text}</p>
             <ul>
@@ -36,6 +48,9 @@ const PlayQuizPage: FC = () => {
                 )
               }
             </ul>
+            <Button onClick={() => navigate(`/play/${quizId}/${Number(order) + 1}`)}>
+              Question suivante
+            </Button>
           </>
       }
     </Container>

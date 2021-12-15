@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Button, Card } from "../styles";
 import { Heading2 } from "../styles/heading";
@@ -25,9 +26,11 @@ const QuizCard: FC<QuizCardProps> = ({ quiz }) => {
       <p>
         {quiz.description}
       </p>
-      <Button>
-        Jouer
-      </Button>
+      <Link to={`/play/${quiz._id}/1`}>
+        <Button>
+          Jouer
+        </Button>
+      </Link>
     </Card>
   )
 }
