@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Question } from "../../types/api";
-import { FaunaId } from "../../types/fauna";
-import graphqlFetch from "../../utils/graphql-fetch";
-import RequestState from "../../utils/request-state";
+import { Question } from "../../../types/api";
+import { FaunaId } from "../../../types/fauna";
+import graphqlFetch from "../../../utils/graphql-fetch";
+import RequestState from "../../../utils/request-state";
 
 const query = `
 query QuestionWithAnswersQuery($quizId: ID!, $order: Int!) {

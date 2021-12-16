@@ -61,16 +61,25 @@ const run = async () => {
         body: fql.Query(
           fql.Lambda(
             ["quizId", "order"],
-            fql.Select(
-              ["data", 0],
-              fql.Map(
-                fql.Paginate(
-                  fql.Match(fql.Index("questionByQuizAndOrder"), [
-                    fql.Ref(fql.Collection("Quiz"), fql.Var("quizId")),
-                    fql.Var("order")
-                  ])
-                ),
-                fql.Lambda("ref", fql.Get(fql.Var("ref")))
+            fql.Let(
+              {
+                array: fql.Map(
+                  fql.Paginate(
+                    fql.Match(fql.Index("questionByQuizAndOrder"), [
+                      fql.Ref(fql.Collection("Quiz"), fql.Var("quizId")),
+                      fql.Var("order")
+                    ])
+                  ),
+                  fql.Lambda("ref", fql.Get(fql.Var("ref")))
+                )
+              },
+              fql.If(
+                fql.IsEmpty(fql.Var("array")),
+                null,
+                fql.Select(
+                  ['data', 0],
+                  fql.Var('array')
+                )
               )
             )
           )
