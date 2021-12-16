@@ -25,12 +25,12 @@ query QuestionWithAnswersQuery($quizId: ID!, $order: Int!) {
 
 interface QuestionWithAnswersQueryResponse {
   data: {
-    questionByQuizIdAndOrder: Question
+    questionByQuizIdAndOrder: Question | null
   }
 }
 
 const useQuestionWithAnswers = (quizId: FaunaId, order: number) => {
-  const [question, setQuestion] = useState<Question>();
+  const [question, setQuestion] = useState<Question | null>();
   const [requestState, setRequestState] = useState(RequestState.Idle);
 
   useEffect(
