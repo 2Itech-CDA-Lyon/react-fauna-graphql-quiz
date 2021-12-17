@@ -1,6 +1,7 @@
 import { FC } from "react";
 import Loader from "react-loader-spinner";
 import { QuizCard } from "../../components";
+import Navbar from "../../components/navbar";
 import { Container, Flex, List } from "../../styles";
 import { Heading1 } from "../../styles/heading";
 import RequestState from "../../utils/request-state";
@@ -11,6 +12,7 @@ const AllQuizzesPage: FC = () => {
 
   return (
     <Container>
+      <Navbar />
       <Heading1>Tous nos quiz</Heading1>
       {
         requestState === RequestState.Pending ?

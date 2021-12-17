@@ -29,27 +29,27 @@ const run = async () => {
   });
 
   // Create custom indexes
+  const indexData = {
+    name: 'questionByQuizAndOrder',
+    source: fql.Collection('Question'),
+    terms: [
+      { field: ['data', 'quiz'] },
+      { field: ['data', 'order'] },
+    ],
+    unique: true,
+  };
   console.info('Creating custom indexes...');
   await faunaClient.query(
     fql.If(
       fql.Exists(
         fql.Index('questionByQuizAndOrder')
       ),
-      fql.Delete(fql.Index('questionByQuizAndOrder')),
-      null
+      fql.Update(
+        fql.Index('questionByQuizAndOrder'),
+        indexData
+      ),
+      fql.CreateIndex(indexData)
     )
-  );
-
-  await faunaClient.query(
-    fql.CreateIndex({
-      name: 'questionByQuizAndOrder',
-      source: fql.Collection('Question'),
-      terms: [
-        { field: ['data', 'quiz'] },
-        { field: ['data', 'order'] },
-      ],
-      unique: true,
-    })
   );
 
   // Create custom resolvers

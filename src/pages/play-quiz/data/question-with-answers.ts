@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useCurrentGameContext } from "../../../contexts/current-game";
 import { Question } from "../../../types/api";
 import { FaunaId } from "../../../types/fauna";
 import graphqlFetch from "../../../utils/graphql-fetch";
@@ -30,8 +31,9 @@ interface QuestionWithAnswersQueryResponse {
 }
 
 const useQuestionWithAnswers = (quizId: FaunaId, order: number) => {
-  const [question, setQuestion] = useState<Question | null>();
+  const [question, setQuestion] = useState<Question | null | undefined>(undefined);
   const [requestState, setRequestState] = useState(RequestState.Idle);
+  const { actions } = useCurrentGameContext();
 
   useEffect(
     () => {
@@ -40,7 +42,9 @@ const useQuestionWithAnswers = (quizId: FaunaId, order: number) => {
       .then(
         (json: QuestionWithAnswersQueryResponse) => {
           setRequestState(RequestState.Success);
-          setQuestion(json.data.questionByQuizIdAndOrder)
+          const question = json.data.questionByQuizIdAndOrder;
+          setQuestion(question);
+          actions.setCurrentQuestion(question);
         }
       );
     },

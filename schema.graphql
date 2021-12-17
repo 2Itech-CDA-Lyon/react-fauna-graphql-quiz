@@ -4,6 +4,7 @@ A registered user.
 type User {
     email: String!
     quizzes: [Quiz!] @relation
+    scores: [Score!] @relation
 }
 
 """
@@ -15,6 +16,7 @@ type Quiz {
     difficulty: Int!
     author: User!
     questions: [Question!] @relation
+    scores: [Score!] @relation
 }
 
 """
@@ -36,11 +38,21 @@ type Answer {
     question: Question! @relation(name: "possible_answer")
 }
 
+"""
+A score obtained by a user after completing a quiz.
+"""
+type Score {
+    value: Int!
+    user: User!
+    quiz: Quiz!
+}
+
 type Query {
     allQuestions: [Question!]
     allQuizzes: [Quiz!]
     allUsers: [User!]
     allAnswers: [Answer!]
+    allScores: [Score!]
     quizzesByDifficulty(difficulty: Int): [Quiz!]
     questionByQuizIdAndOrder(quizId: ID!, order: Int!): Question @resolver(name: "questionByQuizIdAndOrder")
 }

@@ -3,10 +3,11 @@ import RequestState from "../../utils/request-state";
 import { Button, Card, Container, Flex, List } from "../../styles";
 import { Heading1 } from "../../styles/heading";
 import Loader from "react-loader-spinner";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Answer, Question } from "../../types/api";
 import { FaTimesCircle, FaCheckCircle } from 'react-icons/fa';
-import { useRightAnswer, useQuestionWithAnswers } from "./data";
+import { useRightAnswer, useQuestionWithAnswers, useRegisterScore } from "./data";
+import Navbar from "../../components/navbar";
 
 interface PlayQuizPageContentProps {
   question: Question
@@ -86,7 +87,6 @@ const PlayQuizPageContent: FC<PlayQuizPageContentProps> = ({ question }) => {
 
 const PlayQuizPage: FC = () => {
   const { quizId, order } = useParams();
-  const navigate = useNavigate();
   
   if (typeof quizId === 'undefined') {
     throw new Error('URL parameter "quizId" is missing.');
@@ -97,16 +97,13 @@ const PlayQuizPage: FC = () => {
   }
   
   const { question, requestState } = useQuestionWithAnswers(quizId, Number(order));
-
-  if (question === null) {
-    navigate('/');
-    return null;
-  }
+  useRegisterScore(quizId, question);
 
   return (
     <Container>
+      <Navbar />
       {
-        requestState === RequestState.Pending ?
+        requestState === RequestState.Pending || question === null ?
           <Flex justifyContent="center">
             <Loader
               type="Oval"

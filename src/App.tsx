@@ -1,7 +1,8 @@
 import { FC } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
-import { AllQuizzesPage, PlayQuizPage } from './pages';
+import { CurrentGameContextProvider } from './contexts/current-game';
+import { AllQuizzesPage, PlayQuizPage, PlayResultPage, PlaySwitch } from './pages';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -14,13 +15,17 @@ const App: FC = () => {
   return (
     <>
       <GlobalStyle />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<AllQuizzesPage />} />
-          <Route path="/play/:quizId/:order" element={<PlayQuizPage />} />
-          <Route path="*" element={<div>Page not found.</div>} />
-        </Routes>
-      </BrowserRouter>
+      <CurrentGameContextProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<AllQuizzesPage />} />
+            <Route path="/play" element={<PlaySwitch />} />
+            <Route path="/play/:quizId/:order" element={<PlayQuizPage />} />
+            <Route path="/play/result/:scoreId" element={<PlayResultPage />} />
+            <Route path="*" element={<div>Page not found.</div>} />
+          </Routes>
+        </BrowserRouter>
+      </CurrentGameContextProvider>
     </>
   )
 }

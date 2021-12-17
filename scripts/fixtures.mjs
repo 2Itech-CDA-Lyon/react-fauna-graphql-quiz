@@ -69,7 +69,7 @@ const answers = [
 
 const run = async () => {
   console.info('Truncating collections...');
-  for (const collectionName of ['Users', 'Quizzes', 'Questions', 'Answers']) {
+  for (const collectionName of ['Users', 'Quizzes', 'Questions', 'Answers', 'Scores']) {
     await faunaClient.query(
       fql.Map(
         fql.Paginate(
